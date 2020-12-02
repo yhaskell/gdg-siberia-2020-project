@@ -5,15 +5,11 @@ import express from "express";
 import Knex from "knex";
 import morgan from "morgan";
 
+import resolvers from "./resolvers";
+
 const schema = readFileSync(path.resolve(__dirname, "../schema.graphql"), "utf-8");
 
 const typeDefs = gql`${schema}`;
-
-const resolvers = {
-  Query: {
-    hello: () => "hello"
-  }
-};
 
 export default function initializeServer(connection: Knex) {
   const app = express();

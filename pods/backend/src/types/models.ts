@@ -18,3 +18,23 @@ export interface User {
   name: string;
   email: string;
 }
+
+export interface Order {
+  id: string;
+  original_price: number;
+  discounted_price: number;
+  status: string;
+  user_id: string;
+}
+
+export interface OrderItem {
+  order_id: string;
+  item_id: string;
+  count: number;
+}
+
+export interface OrderLogEntry {
+  order_id: string;
+  status: string;
+  date: Date;
+}
