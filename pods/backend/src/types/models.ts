@@ -29,7 +29,7 @@ export interface Order {
 
 export interface OrderItem {
   order_id: string;
-  item_id: string;
+  product_id: string;
   count: number;
 }
 

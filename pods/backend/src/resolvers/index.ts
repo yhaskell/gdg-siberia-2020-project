@@ -3,9 +3,7 @@ import Context from "../context";
 import Date from "./date";
 
 import service from "../services";
-import { Distillery, User } from "../types/models";
-
-
+import { Distillery, Order, OrderItem, Product, User } from "../types/models";
 
 const resolvers: IResolvers<any, Context> = {
   Date,
@@ -16,6 +14,16 @@ const resolvers: IResolvers<any, Context> = {
   Distillery: {
     users: (parent: Distillery, args: any, ctx) => ctx.loaders.userByDistilleryId.load(parent.id),
     products: (parent: Distillery, args: any, ctx) => ctx.loaders.productByDistilleryId.load(parent.id),
+  },
+  Order: {
+    items: (parent: Order, args: any, ctx) => ctx.loaders.orderItems.load(parent.id),
+    log: (parent: Order, args: any, ctx) => ctx.loaders.orderLogs.load(parent.id),
+  },
+  OrderItem: {
+    product: (parent: OrderItem, args: any, ctx) => ctx.loaders.productsByIds.load(parent.product_id),
+  },
+  Product: {
+    distillery: (parent: Product, args: any, ctx) => ctx.loaders.distillery.load(parent.distillery_id),
   },
   Query: {
     products: (parent: any, __, ctx) => service.products.getAllProducts(ctx),

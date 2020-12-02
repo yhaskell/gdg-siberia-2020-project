@@ -19,3 +19,10 @@ export async function getProductsByDistilleryIds(ctx: Context, ids: readonly str
 
   return ids.map(id => products.filter(p => p.distillery_id === id).map(mapProduct));
 }
+
+export async function getProductsByIds(ctx: Context, ids: readonly string[]) {
+  const products = await ctx.db.select("*").from<Product>("products").whereIn("id", ids);
+  const productsMap = Object.fromEntries(products.map(product => [product.id, product]));
+
+  return ids.map(id => productsMap[id]);
+}

@@ -29,9 +29,9 @@ export async function up(knex: Knex): Promise<any> {
     })
     .createTable("order_items", (table) => {
       table.uuid("order_id").notNullable();
-      table.uuid("item_id").notNullable();
+      table.uuid("product_id").notNullable();
       table.integer("count").notNullable();
-      table.primary(["order_id", "item_id"]);
+      table.primary(["order_id", "product_id"]);
     })
     .createTable("order_logs", (table) => {
       table.uuid("order_id").notNullable();

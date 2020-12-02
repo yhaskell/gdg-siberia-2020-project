@@ -77,7 +77,7 @@ function generateOrder(user_ids: string[]) {
     order,
     items: uniqueItems.map(item => ({
       order_id: id, 
-      item_id: item.item.id,
+      product_id: item.item.id,
       count: item.count,
     })),
     logs: log.map(le => ({
@@ -103,7 +103,9 @@ export default async function generateOrders(knex: Knex) {
 
   let orders = [];
 
-  for (let i = 1; i <= random(200000, 500000); i++) {
+  const count = random(200000, 500000);
+
+  for (let i = 1; i <= count; i++) {
     orders.push(generateOrder(user_ids));
     if (i % 1000 === 0) {
       await saveOrders(knex, orders);
