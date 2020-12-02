@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "workspaces": [
+    "pods/*"
+  ],
+  "scripts": {
+    "frontend": "yarn --cwd pods/frontend start",
+    "backend": "yarn --cwd pods/backend start"
+  }
+}
