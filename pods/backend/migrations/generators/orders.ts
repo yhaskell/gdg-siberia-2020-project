@@ -43,10 +43,10 @@ function is(status: string, required: string) {
   return false;
 }
 
-async function generateOrder(knex: Knex, user_ids: string[]) {
+function generateOrder(user_ids: string[]) {
   const id = uuid();
 
-  const items = times(random(1, 5, 0), () => ({ item: pick(whiskys), count: random(1, 10) }));
+  const items = times(random(1, 5, 0), () => ({ item: pick(whiskys), count: random(1, 10, 0) }));
 
   const uniqueItems = Object.values(Object.fromEntries(items.map(item => [item.item.id, item])));
 
@@ -73,26 +73,45 @@ async function generateOrder(knex: Knex, user_ids: string[]) {
     user_id,
   };
 
-  await knex("orders").insert(order);
-  await knex("order_items").insert(uniqueItems.map(item => ({
-    order_id: id,
-    item_id: item.item.id,
-    count: item.count,
-  })));
-  await knex("order_logs").insert(log.map(le => ({
-    ...le,
-    order_id: id,
-  })));
+  return {
+    order,
+    items: uniqueItems.map(item => ({
+      order_id: id, 
+      item_id: item.item.id,
+      count: item.count,
+    })),
+    logs: log.map(le => ({
+      ...le,
+      order_id: id,
+    })),
+  };
+}
+
+async function saveOrders(knex: Knex, orders: ReturnType<typeof generateOrder>[]) {
+  const taorders = orders.map(o => o.order);
+  const taitems = orders.flatMap(o => o.items);
+  const talogs = orders.flatMap(o => o.logs);
+
+  await knex("orders").insert(taorders);
+  await knex("order_items").insert(taitems);
+  await knex("order_logs").insert(talogs);
 }
 
 export default async function generateOrders(knex: Knex) {
   const users = await knex.select("id").from<User>("users");
   const user_ids = users.map(u => u.id);
 
+  let orders = [];
+
   for (let i = 1; i <= random(200000, 500000); i++) {
-    await generateOrder(knex, user_ids);
+    orders.push(generateOrder(user_ids));
     if (i % 1000 === 0) {
+      await saveOrders(knex, orders);
+      orders = [];
       console.log("Generated ", i, "elements");
     }
+  }
+  if (orders.length > 0) {
+    await saveOrders(knex, orders);
   }
 }

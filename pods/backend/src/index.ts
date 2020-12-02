@@ -1,34 +1,10 @@
-import express from "express";
-import morgan from "morgan";
-import { ApolloServer, gql } from "apollo-server-express";
+import initializeServer from "./app-with-apollo";
+import initializeDatabase from "./db";
 
-const app = express();
-app.use(morgan("dev"));
-
-const typeDefs = gql`
-type User {
-  id: ID!
-  name: String!
+async function main() {
+  const connection = await initializeDatabase();
+  await initializeServer(connection);
 }
 
-type Query {
-  hello: String
-}
-`;
 
-const resolvers = {
-  Query: {
-    hello: () => "hello"
-  }
-};
-
-const server = new ApolloServer({ 
-  typeDefs, 
-  resolvers, 
-  uploads: false,
-
-});
-
-server.applyMiddleware({ app });
-
-app.listen(5211);
+main().catch(console.error);
