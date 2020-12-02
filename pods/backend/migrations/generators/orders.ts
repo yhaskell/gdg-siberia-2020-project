@@ -51,7 +51,7 @@ function generateOrder(user_ids: string[]) {
   const uniqueItems = Object.values(Object.fromEntries(items.map(item => [item.item.id, item])));
 
   const originalPrice = +uniqueItems.reduce((res, { item, count }) => res + count * item.price, 0).toFixed(2);
-  const discountedPrice = Math.random() > 0.8 ? +(originalPrice * random(0,7, 1)).toFixed(2) : null;
+  const discountedPrice = Math.random() > 0.8 ? +(originalPrice * random(0.7, 1)).toFixed(2) : null;
   
   const status = pick(statuses);
   const user_id = pick(user_ids);
@@ -107,8 +107,8 @@ export default async function generateOrders(knex: Knex) {
     orders.push(generateOrder(user_ids));
     if (i % 1000 === 0) {
       await saveOrders(knex, orders);
+      console.log("Generated", i, "elements");
       orders = [];
-      console.log("Generated ", i, "elements");
     }
   }
   if (orders.length > 0) {
