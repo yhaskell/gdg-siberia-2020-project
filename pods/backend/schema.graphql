@@ -35,7 +35,7 @@ type Distillery {
   users: [User!]!
 
   """ List of products made by the distillery """
-  product: [Product!]!
+  products: [Product!]!
 }
 
 """
@@ -143,7 +143,7 @@ type Order {
   price: Float!
 
   """ Discounted price for the order """
-  discountedPrice: Float!
+  discountedPrice: Float
 
   """ Order Status """
   status: OrderStatus!

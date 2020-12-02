@@ -1,12 +1,21 @@
-import { Context } from "../types/context";
+import Context from "../context";
 import { Product } from "../types/models";
 
-export async function getAllProducts(ctx: Context) {
-  const products = await ctx.connection.select("*").from<Product>("products");
-
-  return products.map(product => ({
+function mapProduct(product: Product) {
+  return {
     ...product,
     type: product.type.toUpperCase(),
-  }));
+  };
+}
 
+export async function getAllProducts(ctx: Context) {
+  const products = await ctx.db.select("*").from<Product>("products");
+
+  return products.map(mapProduct);
+}
+
+export async function getProductsByDistilleryIds(ctx: Context, ids: readonly string[]) {
+  const products = await ctx.db.select("*").from<Product>("products").whereIn("distillery_id", ids);
+
+  return ids.map(id => products.filter(p => p.distillery_id === id).map(mapProduct));
 }

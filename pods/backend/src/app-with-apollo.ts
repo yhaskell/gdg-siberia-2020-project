@@ -6,6 +6,7 @@ import Knex from "knex";
 import morgan from "morgan";
 
 import resolvers from "./resolvers";
+import Context from "./context";
 
 const schema = readFileSync(path.resolve(__dirname, "../schema.graphql"), "utf-8");
 
@@ -19,7 +20,7 @@ export default function initializeServer(connection: Knex) {
     typeDefs, 
     resolvers, 
     uploads: false,
-    context: (ctx) => ({ ctx, connection }),
+    context: (ctx) => new Context(ctx, connection),
   });
 
   server.applyMiddleware({ app });
