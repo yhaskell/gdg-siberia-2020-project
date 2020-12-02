@@ -1,0 +1,185 @@
+""" Date scalar is used to represent Date values """
+scalar Date
+
+"""
+User objects correspond to agents who sell stuff
+"""
+type User {
+  """ User Id """
+  id: ID!
+  
+  """ Distillery the agent works for """
+  distillery: Distillery!
+
+  """ User Name """
+  name: String!
+
+  """ User Email """
+  email: String!
+
+  """ Orders fulfilled by the agent """
+  orders: [Order!]!
+}
+
+"""
+Distillery registered in the system
+"""
+type Distillery {
+  """ Distillery Id """
+  id: ID!
+  
+  """ Distillery Name """
+  name: String!
+
+  """ List of agents working for the distillery """
+  users: [User!]!
+
+  """ List of products made by the distillery """
+  product: [Product!]!
+}
+
+"""
+Whisky type
+"""
+enum ProductType {
+  """ Grain """
+  GRAIN
+  
+  """ Malt """
+  MALT
+  
+  """ Whiskey """
+  WHISKEY
+  
+  """ Bourbon """
+  BOURBON
+  
+  """ Rye """
+  RYE
+  
+  """ Wheat """
+  WHEAT
+  
+  """ Blend """
+  BLEND
+  
+  """ Flavoured """
+  FLAVOURED
+  
+  """ Barley """
+  BARLEY
+}
+
+"""
+Product is whisky
+"""
+type Product {
+  """ Product Id """
+  id: ID!
+  
+  """ Distillery the product is created in """
+  distillery: Distillery!
+
+  """ Product Name """
+  name: String!
+
+  """ Product rating """
+  rating: Float!
+
+  """ Product type """
+  type: ProductType!
+
+  """ Product price """
+  price: Float!
+}
+
+""" 
+Order Item contains information about items and amount ordered 
+"""
+type OrderItem {
+  """ Ordered Product """
+  product: Product!
+
+  """ Amount of items ordered """
+  count: Int!
+}
+
+"""
+Status of the order
+"""
+enum OrderStatus {
+  """ Order was cancelled by the buyer """
+  CANCELLED
+  
+  """ Order was shipped to the buyer """
+  SHIPPED
+  
+  """ Order was internally processed and is ready to be shipped """
+  PROCESSED
+
+  """ Order was delivered to the recepient """
+  DELIVERED
+
+  """ Order is received from the buyer and waits to be processed """
+  QUEUED
+}
+
+"""
+Order Status Change Log Entry
+"""
+type OrderLogEntry {
+  """ Obtained Status """
+  status: OrderStatus!
+  """ Date when status was obtained """
+  date: Date!
+}
+
+""" Order data """
+type Order {
+  """ Order Id """
+  id: ID!
+
+  """ Total price for the order """
+  price: Float!
+
+  """ Discounted price for the order """
+  discountedPrice: Float!
+
+  """ Order Status """
+  status: OrderStatus!
+
+  """ User that fulfilled the order """
+  user: User!
+
+  """ Items that are contained in the order """
+  items: [OrderItem!]!
+
+  """ Log of status changes, containing dates when the order changed status """
+  log: [OrderLogEntry!]!
+}
+
+"""
+Root Query containing all the information
+"""
+type Query {
+  """ Products available for ordering """
+  products: [Product!]!
+
+  """ Distilleries registered in the system """
+  distilleries: [Distillery!]!
+
+  """ Distillery queried by its Id """
+  distillery(id: ID!): Distillery
+
+  """ User queried by their email """
+  userByEmail(email: String!): User
+
+  """ User queried by their Id """
+  user(id: ID!): User
+
+  """ Order queried by its Id """
+  order(id: ID!): Order
+
+  """ Hello World string """
+  hello: String!
+}
