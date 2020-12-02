@@ -18,7 +18,7 @@ type User {
   email: String!
 
   """ Orders fulfilled by the agent """
-  orders: [Order!]!
+  orders("Only show orders of this status" status: OrderStatus): [Order!]!
 }
 
 """
@@ -169,16 +169,16 @@ type Query {
   distilleries: [Distillery!]!
 
   """ Distillery queried by its Id """
-  distillery(id: ID!): Distillery
+  distillery("Distillery Id" id: ID!): Distillery
 
   """ User queried by their email """
-  userByEmail(email: String!): User
+  userByEmail("User Email" email: String!): User
 
   """ User queried by their Id """
-  user(id: ID!): User
+  user("User Id" id: ID!): User
 
   """ Order queried by its Id """
-  order(id: ID!): Order
+  order("Order Id" id: ID!): Order
 
   """ Hello World string """
   hello: String!

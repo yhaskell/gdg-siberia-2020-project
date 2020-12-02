@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, TextField, Button } from "@material-ui/core";
 import { Field } from "../use-introspection-query";
 import useMapState from "../use-map-state";
+import ArgumentField from "./argument-field";
 
 export default function FieldValuesDialog({ field, values, onClose }: { field: Field; values: Record<string, string>; onClose(key: string, values?: Record<string, string>): void }) {
   const [args, setArg] = useMapState<string, string>(values);
@@ -14,13 +15,7 @@ export default function FieldValuesDialog({ field, values, onClose }: { field: F
     <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
     <DialogContent>
       <DialogContentText id="alert-dialog-description">
-        {field.args.map(arg => <TextField 
-          value={args[arg.name]}
-          label={arg.name}
-          defaultValue={arg.defaultValue} 
-          helperText={arg.description}
-          onChange={({ target }) => setArg(arg.name, target.value)}
-        />)}
+        {field.args.map(arg => <ArgumentField key={arg.name} value={args[arg.name]} arg={arg} field={field} onChange={setArg} />)}
       </DialogContentText>
     </DialogContent>
     <DialogActions>
