@@ -1,185 +1,169 @@
-""" Date scalar is used to represent Date values """
+"""Date scalar is used to represent Date values"""
 scalar Date
 
-"""
-User objects correspond to agents who sell stuff
-"""
+"""User objects correspond to agents who sell stuff"""
 type User {
-  """ User Id """
+  """User Id"""
   id: ID!
   
-  """ Distillery the agent works for """
+  """Distillery the agent works for"""
   distillery: Distillery!
 
-  """ User Name """
+  """User Name"""
   name: String!
 
-  """ User Email """
+  """User Email"""
   email: String!
 
-  """ Orders fulfilled by the agent """
+  """Orders fulfilled by the agent"""
   orders("Only show orders of this status" status: OrderStatus): [Order!]!
 }
 
-"""
-Distillery registered in the system
-"""
+"""Distillery registered in the system"""
 type Distillery {
-  """ Distillery Id """
+  """Distillery Id"""
   id: ID!
   
-  """ Distillery Name """
+  """Distillery Name"""
   name: String!
 
-  """ List of agents working for the distillery """
+  """List of agents working for the distillery"""
   users: [User!]!
 
-  """ List of products made by the distillery """
+  """List of products made by the distillery"""
   products: [Product!]!
 }
 
-"""
-Whisky type
-"""
+"""Whisky type"""
 enum ProductType {
-  """ Grain """
+  """Grain"""
   GRAIN
   
-  """ Malt """
+  """Malt"""
   MALT
   
-  """ Whiskey """
+  """Whiskey"""
   WHISKEY
   
-  """ Bourbon """
+  """Bourbon"""
   BOURBON
   
-  """ Rye """
+  """Rye"""
   RYE
   
-  """ Wheat """
+  """Wheat"""
   WHEAT
   
-  """ Blend """
+  """Blend"""
   BLEND
   
-  """ Flavoured """
+  """Flavoured"""
   FLAVOURED
   
-  """ Barley """
+  """Barley"""
   BARLEY
 }
 
-"""
-Product is whisky
-"""
+"""Product is whisky"""
 type Product {
-  """ Product Id """
+  """Product Id"""
   id: ID!
   
-  """ Distillery the product is created in """
+  """Distillery the product is created in"""
   distillery: Distillery!
 
-  """ Product Name """
+  """Product Name"""
   name: String!
 
-  """ Product rating """
+  """Product rating"""
   rating: Float!
 
-  """ Product type """
+  """Product type"""
   type: ProductType!
 
-  """ Product price """
+  """Product price"""
   price: Float!
 }
 
-""" 
-Order Item contains information about items and amount ordered 
-"""
+"""Order Item contains information about items and amount ordered"""
 type OrderItem {
-  """ Ordered Product """
+  """Ordered Product"""
   product: Product!
 
-  """ Amount of items ordered """
+  """Amount of items ordered"""
   count: Int!
 }
 
-"""
-Status of the order
-"""
+"""Status of the order"""
 enum OrderStatus {
-  """ Order was cancelled by the buyer """
+  """Order was cancelled by the buyer"""
   CANCELLED
   
-  """ Order was shipped to the buyer """
+  """Order was shipped to the buyer"""
   SHIPPED
   
-  """ Order was internally processed and is ready to be shipped """
+  """Order was internally processed and is ready to be shipped"""
   PROCESSED
 
-  """ Order was delivered to the recepient """
+  """Order was delivered to the recepient"""
   DELIVERED
 
-  """ Order is received from the buyer and waits to be processed """
+  """Order is received from the buyer and waits to be processed"""
   QUEUED
 }
 
-"""
-Order Status Change Log Entry
-"""
+"""Order Status Change Log Entry"""
 type OrderLogEntry {
-  """ Obtained Status """
+  """Obtained Status"""
   status: OrderStatus!
-  """ Date when status was obtained """
+  """Date when status was obtained"""
   date: Date!
 }
 
-""" Order data """
+"""Order data"""
 type Order {
-  """ Order Id """
+  """Order Id"""
   id: ID!
 
-  """ Total price for the order """
+  """Total price for the order"""
   price: Float!
 
-  """ Discounted price for the order """
+  """Discounted price for the order"""
   discountedPrice: Float
 
-  """ Order Status """
+  """Order Status"""
   status: OrderStatus!
 
-  """ User that fulfilled the order """
+  """User that fulfilled the order"""
   user: User!
 
-  """ Items that are contained in the order """
+  """Items that are contained in the order"""
   items: [OrderItem!]!
 
-  """ Log of status changes, containing dates when the order changed status """
+  """Log of status changes, containing dates when the order changed status"""
   log: [OrderLogEntry!]!
 }
 
-"""
-Root Query containing all the information
-"""
+"""Root Query containing all the information"""
 type Query {
-  """ Products available for ordering """
+  """Products available for ordering"""
   products: [Product!]!
 
-  """ Distilleries registered in the system """
+  """Distilleries registered in the system"""
   distilleries: [Distillery!]!
 
-  """ Distillery queried by its Id """
+  """Distillery queried by its Id"""
   distillery("Distillery Id" id: ID!): Distillery
 
-  """ User queried by their email """
+  """User queried by their email"""
   userByEmail("User Email" email: String!): User
 
-  """ User queried by their Id """
+  """User queried by their Id"""
   user("User Id" id: ID!): User
 
-  """ Order queried by its Id """
+  """Order queried by its Id"""
   order("Order Id" id: ID!): Order
 
-  """ Hello World string """
+  """Hello World string"""
   hello: String!
 }
