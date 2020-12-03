@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, TextField, Button } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, Button } from "@material-ui/core";
 import { Field } from "../use-introspection-query";
 import useMapState from "../use-map-state";
 import ArgumentField from "./argument-field";
